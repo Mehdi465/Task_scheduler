@@ -1,40 +1,59 @@
 #include <iostream>
+#include <vector>
+#include <map>
+#include <fstream>
+#include <string>
 
 class Time{
-    int hour;
-    int minute;
 
-    Time(int h,int m){
-        // secure condition for hour
-        if (h>23 || h<0)
-        {
-            throw std::invalid_argument("hour is below 0 or above 24");
-        }
+    private :
+        int hour;
+        int minute;
 
-        // secure condition for minute
-        if (m>59 || m<0)
-        {
-            throw std::invalid_argument("minute is below 0 or above 59");
-        }
+    public:
+        Time();
 
-        this->hour = h;
-        this->minute = m;
-    }
+        Time(int h,int m);
 
-    
+        Time addTime(Time time_to_add);
 };
 
 class Task {
-    public:
+
+    private:
         std::string name;
         double probability;
-        Time begin_time;
-        Time end_time;
+        
+    public:
+        Task(){};
 
-        Task (std::string name_task,Time begin_t, Time end_t){
-            this->name = name_task;
-            
-            }
+        Task(std::string line);
 
+        Task (std::string name_task,double probability);
 
+        std::string getName();
     };
+
+
+class Schedule{
+    
+    private:
+        std::map<std::string,Task> tasks;
+        Time begin_t;
+        Time end_t;
+
+    public:
+        Schedule(){};
+
+        Schedule(const std::string file_name,Time start,Time end){};
+
+        void displaySchedule() const;
+
+        void writeTask(std::string file_name) const;
+
+        void addTask(Task new_task);
+        
+        
+
+};
+
