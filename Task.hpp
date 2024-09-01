@@ -16,6 +16,8 @@ class Time{
         Time(int h,int m);
 
         Time addTime(Time time_to_add);
+
+        bool isInferior(Time compared_time);
 };
 
 class Task {
@@ -32,13 +34,17 @@ class Task {
         Task (std::string name_task,double probability);
 
         std::string getName();
+
+        double getProbability();
     };
 
 
 class Schedule{
     
     private:
-        std::map<std::string,Task> tasks;
+        std::map<int,Task> tasks;
+
+        std::vector<double> probability_tasks;
         Time begin_t;
         Time end_t;
 
