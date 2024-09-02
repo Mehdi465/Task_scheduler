@@ -4,8 +4,10 @@
 #include <fstream>
 #include <string>
 
-class Time{
+#ifndef TASK_HPP
+#define TASK_HPP
 
+class Time{
     private :
         int hour;
         int minute;
@@ -15,10 +17,12 @@ class Time{
 
         Time(int h,int m);
 
-        Time addTime(Time time_to_add);
+        void addTime(Time time_to_add);
 
         bool isInferior(Time compared_time);
 };
+
+
 
 class Task {
 
@@ -27,7 +31,7 @@ class Task {
         double probability;
         
     public:
-        Task(){};
+        Task();
 
         Task(std::string line);
 
@@ -43,23 +47,20 @@ class Schedule{
     
     private:
         std::map<int,Task> tasks;
-
         std::vector<double> probability_tasks;
         Time begin_t;
         Time end_t;
 
     public:
-        Schedule(){};
+        Schedule();
 
-        Schedule(const std::string file_name,Time start,Time end){};
+        Schedule(const std::string file_name,Time start,Time end);
 
         void displaySchedule() const;
 
         void writeTask(std::string file_name) const;
 
-        void addTask(Task new_task);
-        
-        
-
 };
+
+#endif // TASK_HPP
 

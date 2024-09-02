@@ -1,4 +1,3 @@
-#include "Task.hpp"
 #include <map>
 #include <string>
 #include <fstream>
@@ -6,6 +5,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <cmath>
+#include "Task.hpp"
 
 #define TIME_PER_TASK 45
 
@@ -28,9 +28,10 @@ Time::Time(int h,int m){
     this->minute = m;
 }
 
-Time Time::addTime(Time time_to_add){
-    
-    this->hour = (time_to_add.hour+this->hour)%24 + (this->minute+time_to_add.minute)/60;   
+void Time::addTime(Time time_to_add){
+    this->minute += time_to_add.minute;
+    this->hour = (this->hour + time_to_add.hour + this->minute / 60) % 24;
+    this->minute %= 60;
 }
 
 bool Time::isInferior(Time compared_time){
@@ -38,7 +39,7 @@ bool Time::isInferior(Time compared_time){
     if (this->hour > compared_time.hour){
         res = false;
     }
-    else if (this->hour = compared_time.hour){
+    else if (this->hour == compared_time.hour){
         if (this->minute >= compared_time.minute){
            res = false;
         }
@@ -109,9 +110,10 @@ Schedule::Schedule(const std::string file_name,Time start, Time end){
     std::string line;
     int sum_proba = 0;
     int index = 0;
+    Task new_task;
 
     while(getline(inputFile,line)){
-        Task new_task = Task(line); 
+        new_task = Task(line); 
         sum_proba += new_task.getProbability();
         this->probability_tasks.push_back(sum_proba);
         this->tasks[index] = new_task;
@@ -123,14 +125,32 @@ Schedule::Schedule(const std::string file_name,Time start, Time end){
     // randomize tasks 
     while(current_time.isInferior(end)){
 
-
-        // add 45 minutes
+        // add 45 minutes for each task
         current_time.addTime(Time(0,TIME_PER_TASK));
+
+        double current_task_proba = (rand() % 100)/100.0;
+
+        // get the current task
+        int index = 0;
+        double sum_index_proba=0;
+        while(sum_index_proba<current_task_proba){
+            sum_index_proba+=this->probability_tasks[index];
+            index++;
+        }
+
+        this->tasks[index] = new_task;
     }
 }
 
-void Schedule::addTask(Task new_task){
-            
-        }
+void Schedule::displaySchedule() const {
+    for (const auto & any : this->tasks){
+        Task task = any.second;
+        std::string name = task.getName();
+        std::cout << name << std::endl;
+    }
+}
+
+
+
 
         
