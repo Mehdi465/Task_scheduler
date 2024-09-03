@@ -47,6 +47,14 @@ bool Time::isInferior(Time compared_time){
     return res;
 }
 
+int Time::getMinute(){
+    return this->minute;
+}
+
+int Time::getHour(){
+    return this->hour;
+}
+
 
 // Task part
 Task::Task() : name(""), probability(0.0){};
@@ -87,7 +95,7 @@ Task::Task(std::string line){
     this->probability = probability;
 }        
 
-std::string Task::getName(){
+std::string Task::getName() const {
             return this->name;
         }
 
@@ -101,6 +109,9 @@ Schedule::Schedule(const std::string file_name,Time start, Time end){
 
     Schedule res_schedule = Schedule();
 
+    this->begin_t = start;
+    this->end_t = end;
+
     std::ifstream inputFile("tasks.txt");
     if (!inputFile.is_open()){
         std::cerr << "Cant find the file or open it" << std::endl;
@@ -108,20 +119,23 @@ Schedule::Schedule(const std::string file_name,Time start, Time end){
     } 
 
     std::string line;
-    int sum_proba = 0;
+    double sum_proba = 0.0;
     int index = 0;
     Task new_task;
+    std::vector<Task> tasks_inter;
 
     while(getline(inputFile,line)){
         new_task = Task(line); 
         sum_proba += new_task.getProbability();
-        this->probability_tasks.push_back(sum_proba);
-        this->tasks[index] = new_task;
+        this->probability_tasks.push_back(new_task.getProbability());
+        tasks_inter.push_back(new_task);
         index++;
     }
 
     Time current_time = start;
-
+    // activate random
+    srand (time(NULL));
+    
     // randomize tasks 
     while(current_time.isInferior(end)){
 
@@ -132,21 +146,42 @@ Schedule::Schedule(const std::string file_name,Time start, Time end){
 
         // get the current task
         int index = 0;
-        double sum_index_proba=0;
+        double sum_index_proba = this->probability_tasks[0];
         while(sum_index_proba<current_task_proba){
-            sum_index_proba+=this->probability_tasks[index];
             index++;
+            sum_index_proba+=this->probability_tasks[index];
+            
         }
-
-        this->tasks[index] = new_task;
+        this->tasks.push_back(tasks_inter[index]);
     }
 }
 
-void Schedule::displaySchedule() const {
-    for (const auto & any : this->tasks){
-        Task task = any.second;
-        std::string name = task.getName();
-        std::cout << name << std::endl;
+void Schedule::displayScheduleInTerminal() const {
+    for (const Task& task : this->tasks){
+        std::cout << task.getName() << std::endl;
+    }
+}
+
+void Schedule::renderSchedule() const {
+    std::ofstream outputFile("schedule_output.txt");
+    if (!outputFile.is_open()) {
+        std::cerr << "Cannot open output file" << std::endl;
+        return;
+    }
+
+    Time current_time = this->begin_t;
+    for (const Task& task : this->tasks) {
+        outputFile << current_time.getHour() << ":" << (current_time.getMinute() < 10 ? "0" : "") << current_time.getMinute();
+        current_time.addTime(Time(0, TIME_PER_TASK));
+        outputFile << " - " << current_time.getHour() << ":" << (current_time.getMinute() < 10 ? "0" : "") << current_time.getMinute();
+        outputFile << " : " << task.getName() << std::endl;
+    }
+
+    outputFile.close();
+    // run automatically the Python script
+    int result = system("python3 generate_schedule.py");
+    if (result != 0) {
+        std::cerr << "Error executing the Python script" << std::endl;
     }
 }
 

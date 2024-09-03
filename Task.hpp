@@ -20,8 +20,11 @@ class Time{
         void addTime(Time time_to_add);
 
         bool isInferior(Time compared_time);
-};
 
+        int getMinute();
+
+        int getHour();
+};
 
 
 class Task {
@@ -37,7 +40,7 @@ class Task {
 
         Task (std::string name_task,double probability);
 
-        std::string getName();
+        std::string getName() const;
 
         double getProbability();
     };
@@ -46,7 +49,7 @@ class Task {
 class Schedule{
     
     private:
-        std::map<int,Task> tasks;
+        std::vector<Task> tasks;
         std::vector<double> probability_tasks;
         Time begin_t;
         Time end_t;
@@ -56,7 +59,9 @@ class Schedule{
 
         Schedule(const std::string file_name,Time start,Time end);
 
-        void displaySchedule() const;
+        void displayScheduleInTerminal() const;
+
+        void renderSchedule() const;
 
         void writeTask(std::string file_name) const;
 
