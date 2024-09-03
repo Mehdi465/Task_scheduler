@@ -1,7 +1,0 @@
-18:30 - 19:15 : learn ML
-19:15 - 20:00 : drawing
-20:00 - 20:45 : learn ML
-20:45 - 21:30 : projects
-21:30 - 22:15 : learn arabic
-22:15 - 23:00 : projects
-23:00 - 23:45 : learn rust

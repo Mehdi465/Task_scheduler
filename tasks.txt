@@ -4,3 +4,4 @@ learn rust,15%
 learn ML,15%
 learn arabic,10%
 learn Quran,10%
+xwqdqwd,50%

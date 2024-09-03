@@ -11,11 +11,12 @@ class Time{
     private :
         int hour;
         int minute;
+        int day; // start from 0 from the day the schedule starts
 
     public:
         Time();
 
-        Time(int h,int m);
+        Time(int d, int h, int m);
 
         void addTime(Time time_to_add);
 
@@ -24,6 +25,8 @@ class Time{
         int getMinute();
 
         int getHour();
+
+        void printTime() const;
 };
 
 
