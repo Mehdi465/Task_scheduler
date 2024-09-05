@@ -1,6 +1,5 @@
-projects,25%
+projects,30%
 drawing,25%
-learn rust,15%
-learn ML,15%
+learn rust,17.5%
+learn ML,17.5%
 learn arabic,10%
-learn Quran,10%

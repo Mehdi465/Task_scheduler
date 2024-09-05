@@ -7,7 +7,7 @@
 #include <cmath>
 #include "Task.hpp"
 
-#define TIME_PER_TASK 45
+#define TIME_PER_TASK 30
 
 
 // Time part
